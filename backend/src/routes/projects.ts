@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { projectController } from '../controllers/projectController';
 import { authMiddleware } from '../middleware/auth';
+import { documentController } from '../controllers/documentController';
 
 const router = Router();
 
@@ -26,6 +27,9 @@ router.get('/', projectController.getUserProjects);
  * @desc    获取特定项目详情
  * @access  Private
  */
-router.get('/:id', projectController.getProject);
+router.get('/:projectId', projectController.getProject);
+
+router.post('/:projectId/documents', documentController.createDocument);
+router.get('/:projectId/documents', documentController.getProjectDocuments);
 
 export default router;

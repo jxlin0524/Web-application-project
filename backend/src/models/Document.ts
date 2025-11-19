@@ -129,4 +129,51 @@ export class Document {
       connection.release();
     }
   }
+  /**
+   * 自动保存文档内容（只更新内容，不更新其他字段）
+   */
+  static async autoSave(documentId: number, content: string): Promise<boolean> {
+    const sql = 'UPDATE documents SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?';
+    const result = await db.query(sql, [content, documentId]);
+    return (result as any).affectedRows > 0;
+  }
+
+  /**
+   * 批量自动保存多个文档
+   */
+  static async batchAutoSave(saves: { documentId: number; content: string }[]): Promise<boolean> {
+    const connection = await db.getConnection();
+    
+    try {
+      await connection.beginTransaction();
+
+      for (const save of saves) {
+        await connection.execute(
+          'UPDATE documents SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?',
+          [save.content, save.documentId]
+        );
+      }
+
+      await connection.commit();
+      return true;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
+  /**
+   * 获取文档的自动保存状态
+   */
+  static async getAutoSaveStatus(documentId: number): Promise<{ 
+    document_id: number; 
+    updated_at: Date;
+    has_content: boolean;
+  } | null> {
+    const sql = 'SELECT document_id, updated_at, content IS NOT NULL as has_content FROM documents WHERE document_id = ?';
+    const results = await db.query(sql, [documentId]) as any[];
+    return results.length > 0 ? results[0] : null;
+  }
 }
