@@ -3,8 +3,9 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { testConnection, initDatabase } from './config/database'
-import userRoutes from './routes/users';
+import { testConnection, initDatabase } from './config/database'; 
+import userRoutes from './routes/users'; 
+import projectRoutes from './routes/projects';
 
 // 加载环境变量
 dotenv.config();
@@ -13,33 +14,75 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 数据库连接初始化
+const initializeApp = async () => {
+  try {
+    // 测试数据库连接
+    const isConnected = await testConnection();
+    if (!isConnected) {
+      console.error('❌ 无法连接到数据库，请检查配置');
+      process.exit(1);
+    }
+
+    // 初始化数据库表
+    await initDatabase();
+    console.log('✅ 数据库初始化完成');
+
+    // 启动服务器
+    app.listen(PORT, () => {
+      console.log(`🚀 ProsePal Server running on port ${PORT}`);
+      console.log(`📊 Environment: ${process.env.NODE_ENV}`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/health`);
+      console.log(`📚 API Documentation: http://localhost:${PORT}/api/docs`);
+      console.log(`💾 Database: ${process.env.DB_NAME}@${process.env.DB_HOST}`);
+    });
+
+  } catch (error) {
+    console.error('❌ 应用启动失败:', error);
+    process.exit(1);
+  }
+};
+
 // 中间件配置
-app.use(helmet()); // 安全头设置
+app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Vue.js默认端口
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
-app.use(morgan('combined')); // 请求日志
-app.use(express.json({ limit: '10mb' })); // JSON解析，增加大小限制用于文本内容
-app.use(express.urlencoded({ extended: true })); // URL编码解析
-app.use('/api/users', userRoutes);
+app.use(morgan('combined'));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
+
+// 注册路由
+app.use('/api/users', userRoutes); // ✅ 添加用户路由
+app.use('/api/projects', projectRoutes);
 
 // 健康检查路由
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'OK',
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV,
-    service: 'ProsePal Backend API', // [!code focus] // 改为项目名称
-    version: process.env.APP_VERSION || '1.0.0',
-    uptime: `${process.uptime().toFixed(2)}秒`,
-    memory: {
-      used: `${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB`,
-      total: `${(process.memoryUsage().heapTotal / 1024 / 1024).toFixed(2)} MB`
-    }
-  });
+app.get('/health', async (req, res) => {
+  try {
+    const dbStatus = await testConnection();
+    
+    res.status(200).json({
+      status: 'OK',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      service: 'ProsePal Backend API',
+      version: process.env.APP_VERSION || '1.0.0',
+      database: {
+        status: dbStatus ? 'connected' : 'disconnected',
+        name: process.env.DB_NAME,
+        host: process.env.DB_HOST
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'ERROR',
+      database: 'disconnected',
+      error: '数据库连接失败'
+    });
+  }
 });
 
 // 根路由
