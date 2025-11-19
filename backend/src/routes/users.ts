@@ -1,6 +1,8 @@
 // src/routes/users.ts - 确保这是完整内容
 import { Router } from 'express';
 import { userController } from '../controllers/userController';
+import { authController } from '../controllers/authController';
+import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
@@ -10,6 +12,7 @@ const router = Router();
  * @access  Public
  */
 router.post('/register', userController.register);
+router.post('/login', authController.login);
 
 /**
  * @route   GET /api/users/profile
@@ -17,6 +20,8 @@ router.post('/register', userController.register);
  * @access  Private (后续添加认证中间件)
  */
 router.get('/profile', userController.getProfile);
+router.get('/me', authMiddleware, authController.getCurrentUser);
+router.get('/profile', authMiddleware, userController.getProfile);
 
 /**
  * @route   GET /api/users
