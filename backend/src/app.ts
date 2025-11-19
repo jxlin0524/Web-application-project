@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { testConnection, initDatabase } from './config/database'; 
 import userRoutes from './routes/users'; 
 import projectRoutes from './routes/projects';
+import documentRoutes from './routes/documents'
 
 // 加载环境变量
 dotenv.config();
@@ -58,6 +59,7 @@ app.use(express.urlencoded({ extended: true }));
 // 注册路由
 app.use('/api/users', userRoutes); // ✅ 添加用户路由
 app.use('/api/projects', projectRoutes);
+app.use('/api/documents', documentRoutes);
 
 // 健康检查路由
 app.get('/health', async (req, res) => {
