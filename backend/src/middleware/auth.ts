@@ -15,7 +15,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: '访问被拒绝，请提供有效的 token'
+        message: 'Access denied, please provide a valid token'
       });
     }
 
@@ -25,7 +25,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: '无效的 token'
+      message: 'Invalid token'
     });
   }
 };

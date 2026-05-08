@@ -1,0 +1,51 @@
+[
+  {
+    "year": "Chapter 2",
+    "title": "Invites Mole and Rat to See His Caravan",
+    "description": "Toad invites Mole and Rat to see his newly acquired caravan, proudly displaying its interior arrangements and provisions.",
+    "chapterId": 46,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 4",
+    "title": "Reckless Behavior Discussed",
+    "description": "Toad's reckless behavior is discussed by Rat and Mole during a snowstorm, including his seventh motor accident.",
+    "chapterId": 48,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 6",
+    "title": "Arrives at Toad Hall in Motor-Clothing",
+    "description": "Toad arrives at Toad Hall dressed in his usual motor-clothing, ready for another outing.",
+    "chapterId": 50,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 8",
+    "title": "Imprisoned and Comforted by Gaoler's Daughter",
+    "description": "Toad is imprisoned in a medieval fortress dungeon but begins to recover when the gaoler’s daughter brings him food and comforts him.",
+    "chapterId": 52,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 10",
+    "title": "Escapes from Prison and Meets Barge Woman",
+    "description": "Toad leaves his hollow tree home feeling free after escaping prison. He meets a barge woman who offers him a ride towards Toad Hall.",
+    "chapterId": 54,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 11",
+    "title": "Rescued from Canal and Feels Remorseful",
+    "description": "Toad is rescued by Rat after falling into a canal. He boasts about his adventures but feels remorseful when told that Stoats and Weasels have taken over Toad Hall.",
+    "chapterId": 55,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 12",
+    "title": "Participates in Reclaiming Toad Hall",
+    "description": "Toad, along with Mole, Badger, and Rat, enters a secret passage under the riverbank to reclaim Toad Hall from the Weasels.",
+    "chapterId": 56,
+    "color": "blue"
+  }
+]

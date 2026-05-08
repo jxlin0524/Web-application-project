@@ -1,4 +1,4 @@
-// src/routes/users.ts - 确保这是完整内容
+
 import { Router } from 'express';
 import { userController } from '../controllers/userController';
 import { authController } from '../controllers/authController';
@@ -8,7 +8,7 @@ const router = Router();
 
 /**
  * @route   POST /api/users/register
- * @desc    用户注册
+ * @desc    
  * @access  Public
  */
 router.post('/register', userController.register);
@@ -16,8 +16,8 @@ router.post('/login', authController.login);
 
 /**
  * @route   GET /api/users/profile
- * @desc    获取用户信息
- * @access  Private (后续添加认证中间件)
+ * @desc    
+ * @access  
  */
 router.get('/profile', userController.getProfile);
 router.get('/me', authMiddleware, authController.getCurrentUser);
@@ -25,16 +25,16 @@ router.get('/profile', authMiddleware, userController.getProfile);
 
 /**
  * @route   GET /api/users
- * @desc    获取用户列表（后续用于管理）
+ * @desc    
  * @access  Private
  */
 router.get('/', (req, res) => {
   res.json({
     success: true,
-    message: '用户列表接口',
+    message: 'User list interface',
     data: []
   });
 });
 
-// 确保这行存在且正确
+
 export default router;

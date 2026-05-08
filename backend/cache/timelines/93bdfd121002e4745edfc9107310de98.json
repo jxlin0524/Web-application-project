@@ -1,0 +1,86 @@
+[
+  {
+    "year": "Chapter 1",
+    "title": "Escapes Home and Meets Rat",
+    "description": "Cleans his house, then impulsively leaves to explore outdoors, meets Water Rat by a riverbank, and goes boating.",
+    "chapterId": 45,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 2",
+    "title": "Meets Toad",
+    "description": "Asks Rat to introduce him to Toad, who shows off his new caravan for traveling.",
+    "chapterId": 46,
+    "color": "green"
+  },
+  {
+    "year": "Chapter 3",
+    "title": "Explores the Wild Wood Alone",
+    "description": "Decides to explore the Wild Wood alone despite Rat's discouragement, enters the forest and feels increasingly threatened.",
+    "chapterId": 47,
+    "color": "brown"
+  },
+  {
+    "year": "Chapter 4",
+    "title": "Seeks Shelter with Badger",
+    "description": "With Rat, seeks shelter from a snowstorm in the Wild Wood and knocks on Badger's door for help.",
+    "chapterId": 48,
+    "color": "gray"
+  },
+  {
+    "year": "Chapter 5",
+    "title": "Returns Home",
+    "description": "Returns home after a day out hunting and exploring, senses his old home nearby but is left alone in the road.",
+    "chapterId": 49,
+    "color": "yellow"
+  },
+  {
+    "year": "Chapter 6",
+    "title": "Prepares for Boating Season",
+    "description": "Helps forcibly remove Toad's motor-clothes after he refuses and listens to Badger lecture Toad.",
+    "chapterId": 50,
+    "color": "green"
+  },
+  {
+    "year": "Chapter 7",
+    "title": "Searches for Portly",
+    "description": "Decides not to sleep but to help search for Otter's son Portly by boat along the river during a moonlit night.",
+    "chapterId": 51,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 8",
+    "title": "Toad Escapes Prison",
+    "description": "Not directly involved, but Toad's escape is mentioned as he regains confidence and talks about his animal friends.",
+    "chapterId": 52,
+    "color": "gray"
+  },
+  {
+    "year": "Chapter 9",
+    "title": "Observes Autumn Migration",
+    "description": "No direct actions, but observes the onset of autumn and departure of various creatures from their summer homes.",
+    "chapterId": 53,
+    "color": "orange"
+  },
+  {
+    "year": "Chapter 10",
+    "title": "Toad Returns Home",
+    "description": "Rescued by Rat, feels remorseful after learning about the takeover of Toad Hall.",
+    "chapterId": 54,
+    "color": "green"
+  },
+  {
+    "year": "Chapter 11",
+    "title": "Reclaims Toad Hall",
+    "description": "Equipped with weapons by Rat, enters a secret passage under the riverbank and helps overpower Weasels in Toad Hall.",
+    "chapterId": 55,
+    "color": "red"
+  },
+  {
+    "year": "Chapter 12",
+    "title": "Restores Order in Toad Hall",
+    "description": "Chases after sentry stoats while Badger directs others to restore order in Toad Hall.",
+    "chapterId": 56,
+    "color": "blue"
+  }
+]

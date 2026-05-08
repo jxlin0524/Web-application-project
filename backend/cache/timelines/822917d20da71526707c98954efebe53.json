@@ -1,0 +1,37 @@
+[
+  {
+    "year": "Chapter 4",
+    "title": "Welcomes Mole and Rat",
+    "description": "Badger welcomes Mole and Rat into his house, provides them with warm clothing and food, and listens to their concerns about Toad.",
+    "chapterId": 48,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 6",
+    "title": "Intervenes in Toad's Motor-Car Addiction",
+    "description": "Badger arrives at Toad Hall to confront Toad about his motor-car addiction, instructs the chauffeur not to wait for Toad, and takes a reluctant Toad inside to talk.",
+    "chapterId": 50,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 6",
+    "title": "Lectures Toad",
+    "description": "Badger lectures Toad in the smoking room, leading Toad to briefly promise to give up cars but later admits he is not truly sorry.",
+    "chapterId": 50,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 11",
+    "title": "Discusses Toad's Fate",
+    "description": "Rat informs Toad about the debate over his fate, with Mole and Badger remaining loyal to him.",
+    "chapterId": 55,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 12",
+    "title": "Reclaims Toad Hall",
+    "description": "Badger directs the animals in overpowering the Weasels and restoring order in Toad Hall.",
+    "chapterId": 56,
+    "color": "blue"
+  }
+]

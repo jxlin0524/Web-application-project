@@ -1,0 +1,86 @@
+[
+  {
+    "year": "Chapter 1",
+    "title": "Greets Mole and Offers Boat Ride",
+    "description": "Greeted Mole, offered a boat ride on the river.",
+    "chapterId": 45,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 2",
+    "title": "Introduces Mole to Toad and His Caravan",
+    "description": "Introduced Mole to Toad, who showed off his new caravan.",
+    "chapterId": 46,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 3",
+    "title": "Discourages Mole from Meeting Badger",
+    "description": "Repeatedly discouraged Mole from meeting Badger, emphasizing Badger's solitude and dislike for visitors.",
+    "chapterId": 47,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 4",
+    "title": "Seeks Shelter with Mole in the Wild Wood",
+    "description": "Sought shelter from a snowstorm along with Mole and knocked on Badger's door for help.",
+    "chapterId": 48,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 5",
+    "title": "Returns Home After Exploring",
+    "description": "Returned home after a day out hunting and exploring with Mole, despite Mole's urgent plea to stop.",
+    "chapterId": 49,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 6",
+    "title": "Helps Remove Toad’s Motor-Clothes",
+    "description": "Helped forcibly remove Toad's motor-clothing after he refused.",
+    "chapterId": 50,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 7",
+    "title": "Decides to Search for Portly",
+    "description": "Decided to search for Otter’s missing son, Portly, by boat along the river during a moonlit night.",
+    "chapterId": 51,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 8",
+    "title": "Rescues Toad from Canal",
+    "description": "Rescued Toad from a canal, pulled him out of a hole he fell into.",
+    "chapterId": 52,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 9",
+    "title": "Observes Migration and Hibernation Preparations",
+    "description": "Observed field mice preparing for winter and swallows planning their migration route.",
+    "chapterId": 53,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 10",
+    "title": "Informs Toad About Hall Takeover",
+    "description": "Informed Toad about the takeover of Toad Hall by Stoats and Weasels.",
+    "chapterId": 54,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 11",
+    "title": "Scolds Toad for Foolish Behavior",
+    "description": "Scolded Toad for his foolish behavior after rescuing him from a canal.",
+    "chapterId": 55,
+    "color": "blue"
+  },
+  {
+    "year": "Chapter 12",
+    "title": "Outfits Mole, Badger and Toad with Weapons",
+    "description": "Ouftitted Mole, Badger, and Toad with weapons for an expedition to reclaim Toad Hall.",
+    "chapterId": 56,
+    "color": "blue"
+  }
+]

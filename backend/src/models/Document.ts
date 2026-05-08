@@ -5,6 +5,7 @@ export interface DocumentData {
   title: string;
   content?: string;
   displayOrder?: number;
+  ai_summary?: string | null;
 }
 
 export interface DocumentRecord {
@@ -15,21 +16,34 @@ export interface DocumentRecord {
   display_order: number;
   created_at: Date;
   updated_at: Date;
+  ai_summary: string | null;
 }
 
+interface DocumentContentRow {
+  project_id: number;
+  content: string | null;
+}
+
+const countWords = (text?: string | null): number => {
+  if (!text) {
+    return 0;
+  }
+  const normalized = text.trim().replace(/\s+/g, ' ');
+  if (!normalized) {
+    return 0;
+  }
+  return normalized.split(' ').length;
+};
+
 export class Document {
-  /**
-   * 创建新文档
-   */
+
   static async create(documentData: DocumentData): Promise<number> {
     const { projectId, title, content, displayOrder } = documentData;
 
-    // 验证输入
     if (!projectId || !title) {
-      throw new Error('项目ID和文档标题是必填的');
+      throw new Error('Project ID and document title are required');
     }
 
-    // 如果没有提供显示顺序，自动计算下一个顺序
     let order = displayOrder;
     if (!order) {
       const maxOrderResult = await db.query(
@@ -46,39 +60,37 @@ export class Document {
     return insertId;
   }
 
-  /**
-   * 根据文档ID查找文档
-   */
   static async findById(documentId: number): Promise<DocumentRecord | null> {
     const sql = 'SELECT * FROM documents WHERE document_id = ?';
     const documents = await db.query(sql, [documentId]) as DocumentRecord[];
     return documents.length > 0 ? documents[0] : null;
   }
 
-  /**
-   * 获取项目的所有文档
-   */
   static async findByProject(projectId: number): Promise<DocumentRecord[]> {
     const sql = 'SELECT * FROM documents WHERE project_id = ? ORDER BY display_order ASC';
     return await db.query(sql, [projectId]) as DocumentRecord[];
   }
 
-  /**
-   * 更新文档
-   */
   static async update(documentId: number, updates: Partial<DocumentData>): Promise<boolean> {
-    const allowedFields = ['title', 'content', 'displayOrder'];
+    const allowedFields = ['title', 'content', 'displayOrder', 'ai_summary'];
     const updateFields = Object.keys(updates).filter(key => 
       allowedFields.includes(key) && updates[key as keyof DocumentData] !== undefined
     );
 
     if (updateFields.length === 0) {
-      throw new Error('没有有效的更新字段');
+      throw new Error('No valid update fields');
     }
 
-    // 处理字段名映射（JavaScript camelCase 到数据库 snake_case）
+    if (updates.content !== undefined && updates.ai_summary === undefined) {
+      updates.ai_summary = null;
+      if (!updateFields.includes('ai_summary')) {
+        updateFields.push('ai_summary');
+      }
+    }
+
     const fieldMapping: { [key: string]: string } = {
-      displayOrder: 'display_order'
+      displayOrder: 'display_order',
+      ai_summary: 'ai_summary'
     };
 
     const setClause = updateFields.map(field => {
@@ -95,18 +107,12 @@ export class Document {
     return (result as any).affectedRows > 0;
   }
 
-  /**
-   * 删除文档
-   */
   static async delete(documentId: number): Promise<boolean> {
     const sql = 'DELETE FROM documents WHERE document_id = ?';
     const result = await db.query(sql, [documentId]);
     return (result as any).affectedRows > 0;
   }
 
-  /**
-   * 重新排序文档
-   */
   static async reorderDocuments(projectId: number, documentOrders: { documentId: number; displayOrder: number }[]): Promise<boolean> {
     const connection = await db.getConnection();
     
@@ -129,18 +135,13 @@ export class Document {
       connection.release();
     }
   }
-  /**
-   * 自动保存文档内容（只更新内容，不更新其他字段）
-   */
+
   static async autoSave(documentId: number, content: string): Promise<boolean> {
-    const sql = 'UPDATE documents SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?';
+    const sql = 'UPDATE documents SET content = ?, ai_summary = NULL, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?';
     const result = await db.query(sql, [content, documentId]);
     return (result as any).affectedRows > 0;
   }
 
-  /**
-   * 批量自动保存多个文档
-   */
   static async batchAutoSave(saves: { documentId: number; content: string }[]): Promise<boolean> {
     const connection = await db.getConnection();
     
@@ -149,7 +150,7 @@ export class Document {
 
       for (const save of saves) {
         await connection.execute(
-          'UPDATE documents SET content = ?, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?',
+          'UPDATE documents SET content = ?, ai_summary = NULL, updated_at = CURRENT_TIMESTAMP WHERE document_id = ?',
           [save.content, save.documentId]
         );
       }
@@ -164,9 +165,6 @@ export class Document {
     }
   }
 
-  /**
-   * 获取文档的自动保存状态
-   */
   static async getAutoSaveStatus(documentId: number): Promise<{ 
     document_id: number; 
     updated_at: Date;
@@ -175,5 +173,29 @@ export class Document {
     const sql = 'SELECT document_id, updated_at, content IS NOT NULL as has_content FROM documents WHERE document_id = ?';
     const results = await db.query(sql, [documentId]) as any[];
     return results.length > 0 ? results[0] : null;
+  }
+
+  static async getWordCountsForProjects(projectIds: number[]): Promise<Record<number, number>> {
+    if (!projectIds.length) {
+      return {};
+    }
+
+    const placeholders = projectIds.map(() => '?').join(', ');
+    const sql = `SELECT project_id, content FROM documents WHERE project_id IN (${placeholders})`;
+    const rows = await db.query(sql, projectIds) as DocumentContentRow[];
+
+    return rows.reduce<Record<number, number>>((acc, row) => {
+      const current = acc[row.project_id] || 0;
+      acc[row.project_id] = current + countWords(row.content);
+      return acc;
+    }, {});
+  }
+
+  static async checkExistsInProject(documentId: number, projectId: number): Promise<boolean> {
+    const rows = await db.query(
+      'SELECT document_id FROM documents WHERE document_id = ? AND project_id = ?',
+      [documentId, projectId]
+    )as any;
+    return rows.length > 0;
   }
 }

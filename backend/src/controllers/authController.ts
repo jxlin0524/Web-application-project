@@ -4,46 +4,45 @@ import { jwtUtils } from '../utils/jwt';
 import { AuthRequest } from '../middleware/auth';
 
 export const authController = {
-  /**
-   * 用户登录
-   * POST /api/users/login
-   */
+  
   login: async (req: Request, res: Response) => {
     try {
-      const { username, password } = req.body;
+      console.log('Login request:', req.body);
+      const { username, email, identifier, password } = req.body;
+      const loginIdentifier = identifier || username || email;
 
-      // 验证输入
-      if (!username || !password) {
+      
+      if (!loginIdentifier || !password) {
         return res.status(400).json({
           success: false,
-          message: '用户名和密码是必填的'
+          message: 'Username/email and password are required'
         });
       }
 
-      // 查找用户（通过用户名或邮箱）
-      let user = await User.findByUsername(username);
+      
+      let user = await User.findByUsername(loginIdentifier);
       if (!user) {
-        // 如果不是用户名，尝试作为邮箱查找
-        user = await User.findByEmail(username);
+        
+        user = await User.findByEmail(loginIdentifier);
       }
 
       if (!user) {
         return res.status(401).json({
           success: false,
-          message: '用户名或密码错误'
+          message: 'Invalid username or password'
         });
       }
 
-      // 验证密码
+      
       const isPasswordValid = await User.verifyPassword(password, user.password);
       if (!isPasswordValid) {
         return res.status(401).json({
           success: false,
-          message: '用户名或密码错误'
+          message: 'Invalid username or password'
         });
       }
 
-      // 生成 JWT token
+      
       const token = jwtUtils.generateToken({
         userId: user.user_id,
         username: user.user_name
@@ -51,7 +50,7 @@ export const authController = {
 
       res.json({
         success: true,
-        message: '登录成功',
+        message: 'Login successful',
         data: {
           user: {
             user_id: user.user_id,
@@ -64,18 +63,15 @@ export const authController = {
       });
 
     } catch (error: any) {
-      console.error('登录错误:', error);
+      console.error('login error:', error);
       res.status(500).json({
         success: false,
-        message: '服务器内部错误'
+        message: 'Internal server error'
       });
     }
   },
 
-  /**
-   * 获取当前用户信息
-   * GET /api/users/me
-   */
+  
   getCurrentUser: async (req: AuthRequest, res: Response) => {
     try {
       const userId = req.user?.userId;
@@ -83,7 +79,7 @@ export const authController = {
       if (!userId) {
         return res.status(401).json({
           success: false,
-          message: '未授权访问'
+          message: 'Unauthorized access'
         });
       }
 
@@ -92,7 +88,7 @@ export const authController = {
       if (!user) {
         return res.status(404).json({
           success: false,
-          message: '用户不存在'
+          message: 'The user does not exist.'
         });
       }
 
@@ -107,10 +103,10 @@ export const authController = {
       });
 
     } catch (error) {
-      console.error('获取用户信息错误:', error);
+      console.error('Error in obtaining user information:', error);
       res.status(500).json({
         success: false,
-        message: '服务器内部错误'
+        message: 'Internal server error'
       });
     }
   }

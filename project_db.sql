@@ -8,26 +8,26 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema project_db
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema project_db
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `project_db` DEFAULT CHARACTER SET utf8 ;
+USE `project_db` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`users`
+-- Table `project_db`.`users`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`users` ;
+DROP TABLE IF EXISTS `project_db`.`users` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`users` (
-  `user_id` BIGINT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `project_db`.`users` (
+  `user_id` BIGINT NOT NULL AUTO_INCREMENT,  
   `user_name` VARCHAR(255) NULL,
   `email` VARCHAR(255) NULL,
   `password` VARCHAR(255) NULL,
-  `creat_at` TIMESTAMP NULL,
+  `creat_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,  
   PRIMARY KEY (`user_id`),
   UNIQUE INDEX `user_name_UNIQUE` (`user_name` ASC) VISIBLE,
   UNIQUE INDEX `email_UNIQUE` (`email` ASC) VISIBLE)
@@ -35,12 +35,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`projects`
+-- Table `project_db`.`projects`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`projects` ;
+DROP TABLE IF EXISTS `project_db`.`projects` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`projects` (
-  `project_id` BIGINT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `project_db`.`projects` (
+  `project_id` BIGINT NOT NULL AUTO_INCREMENT,  
   `author_id` BIGINT NULL,
   `title` VARCHAR(255) NULL,
   `description` TEXT NULL,
@@ -48,19 +48,19 @@ CREATE TABLE IF NOT EXISTS `mydb`.`projects` (
   INDEX `fk_projects_author_idx` (`author_id` ASC) VISIBLE,
   CONSTRAINT `fk_projects_author`
     FOREIGN KEY (`author_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
+    REFERENCES `project_db`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`documents`
+-- Table `project_db`.`documents`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`documents` ;
+DROP TABLE IF EXISTS `project_db`.`documents` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`documents` (
-  `document_id` BIGINT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `project_db`.`documents` (
+  `document_id` BIGINT NOT NULL AUTO_INCREMENT,  
   `project_id` BIGINT NULL,
   `title` VARCHAR(255) NULL,
   `content` MEDIUMTEXT NULL,
@@ -69,83 +69,159 @@ CREATE TABLE IF NOT EXISTS `mydb`.`documents` (
   INDEX `fk_documents_project_idx` (`project_id` ASC) VISIBLE,
   CONSTRAINT `fk_documents_project`
     FOREIGN KEY (`project_id`)
-    REFERENCES `mydb`.`projects` (`project_id`)
+    REFERENCES `project_db`.`projects` (`project_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`versions`
+-- Table `project_db`.`versions`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`versions` ;
+DROP TABLE IF EXISTS `project_db`.`versions` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`versions` (
-  `version_id` BIGINT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `project_db`.`versions` (
+  `version_id` BIGINT NOT NULL AUTO_INCREMENT,  
   `document_id` BIGINT NULL,
   `content` MEDIUMTEXT NULL,
-  `save_at` TIMESTAMP NULL,
+  `save_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,  
   PRIMARY KEY (`version_id`),
   INDEX `fk_versions_document_idx` (`document_id` ASC) VISIBLE,
   CONSTRAINT `fk_versions_document`
     FOREIGN KEY (`document_id`)
-    REFERENCES `mydb`.`documents` (`document_id`)
+    REFERENCES `project_db`.`documents` (`document_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`collaborators`
+-- Table `project_db`.`collaborators`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`collaborators` ;
+DROP TABLE IF EXISTS `project_db`.`collaborators` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`collaborators` (
-  `project_id` BIGINT NULL,
-  `user_id` BIGINT NULL,
+CREATE TABLE IF NOT EXISTS `project_db`.`collaborators` (
+  `project_id` BIGINT NOT NULL,  
+  `user_id` BIGINT NOT NULL,     
   `role` ENUM('editor', 'viewer') NULL,
   PRIMARY KEY (`project_id`, `user_id`),
   INDEX `fk_collaborators_user_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `fk_collaborators_project`
     FOREIGN KEY (`project_id`)
-    REFERENCES `mydb`.`projects` (`project_id`)
+    REFERENCES `project_db`.`projects` (`project_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_collaborators_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
+    REFERENCES `project_db`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`comments`
+-- Table `project_db`.`comments`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `mydb`.`comments` ;
+DROP TABLE IF EXISTS `project_db`.`comments` ;
 
-CREATE TABLE IF NOT EXISTS `mydb`.`comments` (
-  `comment_id` BIGINT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `project_db`.`comments` (
+  `comment_id` BIGINT NOT NULL AUTO_INCREMENT,  
   `document_id` BIGINT NULL,
   `user_id` BIGINT NULL,
   `content` TEXT NULL,
-  `is_resolved` TINYINT(1) NULL,
+  `is_resolved` TINYINT(1) NULL DEFAULT 0,  
   PRIMARY KEY (`comment_id`),
   INDEX `fk_comments_user_idx` (`user_id` ASC) VISIBLE,
   INDEX `fk_comments_document_idx` (`document_id` ASC) VISIBLE,
   CONSTRAINT `fk_comments_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`users` (`user_id`)
+    REFERENCES `project_db`.`users` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_comments_document`
     FOREIGN KEY (`document_id`)
-    REFERENCES `mydb`.`documents` (`document_id`)
+    REFERENCES `project_db`.`documents` (`document_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+USE `project_db`;
+
+ALTER TABLE documents 
+ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+ALTER TABLE documents 
+ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+ALTER TABLE documents 
+ADD COLUMN content TEXT;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+USE `project_db`;
+CREATE TABLE IF NOT EXISTS `project_db`.`timeline_events` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,  
+  `project_id` BIGINT NOT NULL,         
+  `year` VARCHAR(50) NULL,
+  `title` VARCHAR(255) NULL,
+  `description` TEXT NULL,
+  `chapter_id` BIGINT NULL,             -
+  `color` VARCHAR(20) DEFAULT 'blue',
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY (`id`),
+  
+  
+  INDEX `fk_timeline_events_project_idx` (`project_id` ASC) VISIBLE,
+  
+  
+  CONSTRAINT `fk_timeline_events_project`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `project_db`.`projects` (`project_id`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION
+)
+ENGINE = InnoDB;
+
+USE `project_db`;
+
+DROP TABLE IF EXISTS `project_shares`;
+
+CREATE TABLE `project_shares` (
+  `share_id` VARCHAR(64) NOT NULL,       
+  `project_id` BIGINT NOT NULL,          
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `expires_at` TIMESTAMP NULL,           
+  PRIMARY KEY (`share_id`),
+  INDEX `fk_shares_project_idx` (`project_id` ASC),
+  CONSTRAINT `fk_shares_project`
+    FOREIGN KEY (`project_id`)
+    REFERENCES `project_db`.`projects` (`project_id`)
+    ON DELETE CASCADE                    
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `document_comments`;
+
+CREATE TABLE `document_comments` (
+  `comment_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `document_id` BIGINT NOT NULL,
+  `selected_text` TEXT NULL,            
+  `content` TEXT NULL,                   
+  `author_name` VARCHAR(50) DEFAULT 'Guest', 
+  `status` VARCHAR(20) DEFAULT 'open',   
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`),
+  INDEX `fk_doc_comments_doc_idx` (`document_id` ASC),
+  CONSTRAINT `fk_doc_comments_doc`
+    FOREIGN KEY (`document_id`)
+    REFERENCES `project_db`.`documents` (`document_id`)
+    ON DELETE CASCADE                   
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB DEFAULT CHARSET=utf8;
